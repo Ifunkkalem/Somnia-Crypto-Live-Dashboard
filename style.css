@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #0a0014; /* Background Sangat Gelap */
+    color: #e3d7ff; /* Warna Teks Putih Keunguan */
+}
+
+header {
+    text-align: center;
+    padding: 30px 10px;
+    background: #14002b; 
+    border-bottom: 2px solid #6b2fff; /* Garis Ungu Neon */
+    box-shadow: 0 0 20px #6b2fff55;
+}
+
+h1 {
+    color: #b98fff; /* Judul Ungu Cerah */
+    font-size: 28px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background: #1a0033;
+    border: 1px solid #7f32ff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px #6b2fff55;
+    transition: 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0 20px #914dffaa;
+    transform: translateY(-5px);
+}
+
+.price {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.up {
+    color: #51ff8a; /* Hijau Neon untuk Harga Naik */
+}
+
+.down {
+    color: #ff4f6f; /* Merah Neon untuk Harga Turun */
+}
+
+footer {
+    margin-top: 30px;
+    text-align: center;
+    padding: 20px;
+    background: #14002b;
+    border-top: 2px solid #6b2fff;
+}
