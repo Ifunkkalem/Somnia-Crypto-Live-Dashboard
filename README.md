@@ -19,16 +19,9 @@ The core feature is the **Simulated Data Stream Listener**. Instead of tradition
 - **JavaScript (Advanced Somnia Data Stream Simulation & Trigger Logic)**
 
 ### 🚀 Pair List
-- BTC/USDT  
-- ETH/USDT  
-- SOL/USDT  
-- BNB/USDT  
-- XRP/USDT  
-- DOGE/USDT  
-- ADA/USDT  
-- AVAX/USDT  
-- TON/USDT  
-- LINK/USDT  
+- SOMUSDT, SOMETH, SOMBNB, SOMUSDC (Somnia Main Token)
+- ​NIAUSDT, NIASOMI (Related Ecosystem Tokens)
+- ​BTCUSDT, ETHUSDT, BNBUSDT, SOLUSDT (General Market Validation)
 
 ### 📦 How to Run
 Just open `index.html` in any browser, or visit the live GitHub Pages link.
