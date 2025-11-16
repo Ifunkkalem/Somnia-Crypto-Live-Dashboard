@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Somnia Crypto Live Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
     <header>
-        <h1>Somnia Crypto Live Dashboard</h1>
+        <h1>Somnia Crypto Live Dashboard<span id="stream-health"></span></h1>
         <p>Real-time prices powered by onchain-inspired data streams</p>
     </header>
 
@@ -24,6 +27,16 @@
     <footer>
         <p>Built for Somnia Data Streams Hackathon</p>
     </footer>
+
+    <div id="chart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="chart-title"></h2>
+            <div class="chart-container">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
