@@ -59,6 +59,20 @@ function getSimulatedStreamData() {
 
 // Fungsi PENDENGAR (Listener) Data Stream
 function handleStreamUpdate(streamData) {
+    // --- LOGIKA INDIKATOR KESEHATAN BARU ---
+    // Pemicu animasi cepat setiap kali data stream diterima
+    healthIndicator.style.animation = 'blink 0.1s linear';
+    // Hapus animasi setelah selesai untuk menunggu stream berikutnya
+    setTimeout(() => {
+        healthIndicator.style.animation = 'none';
+    }, 100); 
+    // ------------------------------------
+
+    // Kosongkan peringatan lama
+    alertContainer.innerHTML = ''; 
+// ... (sisa fungsi handleStreamUpdate seperti sebelumnya)
+    
+function handleStreamUpdate(streamData) {
     // Kosongkan peringatan lama
     alertContainer.innerHTML = ''; 
 
@@ -130,4 +144,5 @@ function activateSomniaDataStreamSimulation() {
 
 // Mulai Proyek!
 activateSomniaDataStreamSimulation();
+
 
