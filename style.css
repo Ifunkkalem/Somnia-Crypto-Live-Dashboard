@@ -1,13 +1,75 @@
-/* --- Gaya untuk Peningkatan Proyek (SDS Reactions) --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 
-/* Highlight Kartu Volatile */
-.volatile {
-    border: 3px solid #ff4f6f; /* Merah Neon */
-    animation: pulse 1s infinite alternate;
+/* --- Gaya Dasar --- */
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #0a0014;
+    color: #e3d7ff;
 }
-@keyframes pulse {
-    from { box-shadow: 0 0 10px #ff4f6f55; }
-    to { box-shadow: 0 0 30px #ff4f6f; }
+
+header {
+    text-align: center;
+    padding: 30px 10px;
+    background: #14002b;
+    border-bottom: 2px solid #6b2fff;
+    box-shadow: 0 0 20px #6b2fff55;
+}
+
+h1 {
+    color: #b98fff;
+    font-size: 28px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background: #1a0033;
+    border: 1px solid #7f32ff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px #6b2fff55;
+    transition: 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0 20px #914dffaa;
+    transform: translateY(-5px);
+}
+
+.price {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.up {
+    color: #51ff8a;
+}
+
+.down {
+    color: #ff4f6f;
+}
+
+footer {
+    margin-top: 30px;
+    text-align: center;
+    padding: 20px;
+    background: #14002b;
+    border-top: 2px solid #6b2fff;
+}
+
+
+/* --- Gaya Tambahan Minimal untuk Fitur SDS --- */
+
+/* Highlight Kartu Volatile (Tanpa Animasi, hanya Border Tebal) */
+.volatile {
+    border: 3px solid #ff4f6f; /* Merah Neon Tebal saat ada Volatilitas */
 }
 
 /* Log Aktivitas */
