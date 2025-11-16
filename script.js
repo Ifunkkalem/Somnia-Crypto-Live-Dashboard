@@ -6,7 +6,7 @@ const pairs = [
     "NIASOMI", "BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT" 
 ];
 
-const VOLATILITY_THRESHOLD = 0.5; // Batas Volatilitas: 0.5%
+const VOLATILITY_THRESHOLD = 0.5; 
 const container = document.getElementById("crypto-container");
 const logElement = document.getElementById("activity-log");
 const alertContainer = document.getElementById("alert-container");
@@ -16,13 +16,16 @@ const healthIndicator = document.createElement('span');
 healthIndicator.id = 'stream-health';
 document.querySelector('header h1').appendChild(healthIndicator);
 
-let currentPrices = {}; // Menyimpan harga terakhir
+let currentPrices = {}; 
+let historicalData = {}; // Menyimpan riwayat harga untuk grafik
+const MAX_HISTORY = 60; // Menyimpan 60 data poin (60 detik)
+let myChart = null; // Variabel untuk menyimpan instance Chart.js
 
 // Inisialisasi tampilan awal
 pairs.forEach(pair => {
     const card = document.createElement("div");
     card.className = "card";
-    card.id = pair.replace('/', ''); // Hapus slash jika ada (untuk keamanan ID)
+    card.id = pair.replace('/', ''); 
 
     // Menambahkan placeholder untuk Persentase Volatilitas
     card.innerHTML = `
@@ -33,6 +36,12 @@ pairs.forEach(pair => {
 
     container.appendChild(card);
     currentPrices[pair] = 0; 
+    historicalData[pair] = []; // Inisialisasi riwayat harga
+    
+    // TAMBAHKAN CLICK LISTENER KE KARTU
+    card.addEventListener('click', () => {
+        showChart(pair);
+    });
 });
 
 
@@ -43,15 +52,14 @@ function getSimulatedStreamData() {
     pairs.forEach(pair => {
         let lastPrice = currentPrices[pair];
         if (lastPrice === 0) {
-             // Beri harga awal yang masuk akal (SOM mungkin lebih murah, BTC mahal)
+             // Beri harga awal yang masuk akal
              if (pair.includes("SOM") || pair.includes("NIA")) {
-                lastPrice = 0.5 + Math.random() * 5; // Harga rendah
+                lastPrice = 0.5 + Math.random() * 5; 
              } else {
-                lastPrice = 10000 + Math.random() * 50000; // Harga tinggi
+                lastPrice = 10000 + Math.random() * 50000; 
              }
         }
 
-        // Tentukan perubahan acak (sedikit lebih volatile: -1.5% hingga +1.5%)
         const changeFactor = 1 + (Math.random() * 0.03 - 0.015); 
         let newPrice = lastPrice * changeFactor;
         
@@ -80,7 +88,6 @@ function handleStreamUpdate(streamData) {
 
     streamData.forEach(item => {
         const symbol = item.symbol;
-        // Gunakan ID yang sudah dinormalisasi
         const cardId = symbol.replace('/', ''); 
         
         const elPrice = document.querySelector(`#${cardId} .price`);
@@ -133,6 +140,19 @@ function handleStreamUpdate(streamData) {
         elPrice.textContent = "$" + newPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
         currentPrices[symbol] = newPrice;
         
+        // --- Logika Penyimpanan Data Historis ---
+        const now = new Date().toLocaleTimeString('en-US', { hour12: false });
+        
+        historicalData[symbol].push({
+            t: now,
+            y: newPrice
+        });
+        
+        if (historicalData[symbol].length > MAX_HISTORY) {
+            historicalData[symbol].shift(); 
+        }
+        // ------------------------------------
+
         // --- Log Aktivitas ---
         const newLogEntry = document.createElement('p');
         newLogEntry.innerHTML = logMessage;
@@ -140,6 +160,101 @@ function handleStreamUpdate(streamData) {
         
         if (logElement.children.length > 15) {
             logElement.removeChild(logElement.lastChild);
+        }
+    });
+}
+
+// Fungsi untuk menampilkan Grafik Garis
+function showChart(pair) {
+    const modal = document.getElementById('chart-modal');
+    const closeBtn = document.querySelector('.close-button');
+    const chartCtx = document.getElementById('myChart').getContext('2d');
+    
+    // Tampilkan Modal
+    modal.style.display = 'block';
+    document.getElementById('chart-title').textContent = `${pair} - Price History (Last ${MAX_HISTORY} Seconds)`;
+    
+    // Tutup Modal ketika tombol (x) diklik
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+        if (myChart) {
+            myChart.destroy(); 
+        }
+    }
+    
+    // Tutup Modal ketika area luar modal diklik
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+            if (myChart) {
+                myChart.destroy();
+            }
+        }
+    }
+
+    // Ambil data untuk Chart.js
+    const dataPoints = historicalData[pair];
+    const labels = dataPoints.map(p => p.t);
+    const prices = dataPoints.map(p => p.y);
+    
+    // Hancurkan chart lama jika ada
+    if (myChart) {
+        myChart.destroy();
+    }
+
+    // Buat Chart Baru (Tipe Garis)
+    myChart = new Chart(chartCtx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: `${pair} Price`,
+                data: prices,
+                borderColor: '#b98fff', // Warna garis ungu Somnia
+                borderWidth: 2,
+                tension: 0.1,
+                fill: false,
+                pointRadius: 3 
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Price (USD)',
+                        color: '#e3d7ff'
+                    },
+                    ticks: {
+                        color: '#e3d7ff'
+                    },
+                    grid: {
+                        color: '#ffffff1a' 
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time',
+                        color: '#e3d7ff'
+                    },
+                    ticks: {
+                        color: '#e3d7ff'
+                    },
+                    grid: {
+                        color: '#ffffff1a'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#e3d7ff'
+                    }
+                }
+            }
         }
     });
 }
