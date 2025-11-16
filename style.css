@@ -115,3 +115,22 @@ footer {
     border: 1px solid #ff4f6f; /* Merah Neon */
     color: #ff4f6f;
 }
+
+
+/* --- Indikator Stream Health --- */
+#stream-health {
+    width: 10px;
+    height: 10px;
+    background-color: #51ff8a; /* Hijau Neon */
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 10px;
+    animation: none; /* Awalnya tidak berkedip */
+}
+
+/* Animasi untuk menunjukkan data diterima */
+@keyframes blink {
+    from { opacity: 1; }
+    to { opacity: 0.3; }
+}
+
