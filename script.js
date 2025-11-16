@@ -1,4 +1,4 @@
-// script.js (Versi Hackathon - Simulasi Somnia Data Streams)
+// script.js (Versi Final Hackathon - Advanced SDS Simulation)
 
 const pairs = [
     "BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT",
@@ -10,6 +10,7 @@ const container = document.getElementById("crypto-container");
 const logElement = document.getElementById("activity-log");
 const alertContainer = document.getElementById("alert-container");
 
+// Inisialisasi Indikator Kesehatan Stream
 const healthIndicator = document.createElement('span');
 healthIndicator.id = 'stream-health';
 document.querySelector('header h1').appendChild(healthIndicator);
@@ -22,13 +23,15 @@ pairs.forEach(pair => {
     card.className = "card";
     card.id = pair;
 
+    // Menambahkan placeholder untuk Persentase Volatilitas
     card.innerHTML = `
         <h2>${pair}</h2>
+        <div class="percentage-change">-</div>
         <div class="price">Waiting for Stream...</div>
     `;
 
     container.appendChild(card);
-    currentPrices[pair] = 0; // Inisialisasi harga di memori
+    currentPrices[pair] = 0; 
 });
 
 
@@ -39,6 +42,7 @@ function getSimulatedStreamData() {
     pairs.forEach(pair => {
         let lastPrice = currentPrices[pair];
         if (lastPrice === 0) {
+             // Harga awal acak
              lastPrice = 10000 + Math.random() * 50000; 
         }
 
@@ -62,23 +66,18 @@ function handleStreamUpdate(streamData) {
     // --- LOGIKA INDIKATOR KESEHATAN BARU ---
     // Pemicu animasi cepat setiap kali data stream diterima
     healthIndicator.style.animation = 'blink 0.1s linear';
-    // Hapus animasi setelah selesai untuk menunggu stream berikutnya
     setTimeout(() => {
         healthIndicator.style.animation = 'none';
     }, 100); 
     // ------------------------------------
-
-    // Kosongkan peringatan lama
-    alertContainer.innerHTML = ''; 
-// ... (sisa fungsi handleStreamUpdate seperti sebelumnya)
     
-function handleStreamUpdate(streamData) {
     // Kosongkan peringatan lama
     alertContainer.innerHTML = ''; 
 
     streamData.forEach(item => {
         const symbol = item.symbol;
-        const el = document.querySelector(`#${symbol} .price`);
+        const elPrice = document.querySelector(`#${symbol} .price`);
+        const elPercentage = document.querySelector(`#${symbol} .percentage-change`);
         const card = document.getElementById(symbol);
         const oldPrice = currentPrices[symbol];
         const newPrice = parseFloat(item.price);
@@ -89,9 +88,9 @@ function handleStreamUpdate(streamData) {
             // Hitung perubahan persentase
             const percentageChange = ((newPrice - oldPrice) / oldPrice) * 100;
             
-            // --- Logika Volatilitas BARU ---
+            // --- Logika Volatilitas Alert ---
             if (Math.abs(percentageChange) >= VOLATILITY_THRESHOLD) {
-                // Tambahkan kelas border tebal untuk highlight
+                // Tambahkan highlight kartu
                 card.classList.add('volatile');
                 
                 // Tambahkan Peringatan ke Header
@@ -103,28 +102,36 @@ function handleStreamUpdate(streamData) {
                 card.classList.remove('volatile');
             }
             
-            // Tentukan warna (Up/Down)
+            // --- Logika Visual Persentase & Harga ---
+            const sign = percentageChange >= 0 ? '+' : '';
+            elPercentage.textContent = `${sign}${percentageChange.toFixed(2)}%`;
+
             if (newPrice > oldPrice) {
-                el.className = "price up";
+                elPrice.className = "price up";
+                elPercentage.className = "percentage-change up";
             } else if (newPrice < oldPrice) {
-                el.className = "price down";
+                elPrice.className = "price down";
+                elPercentage.className = "percentage-change down";
             } else {
-                el.className = "price"; 
+                elPrice.className = "price";
+                elPercentage.className = "percentage-change";
             }
         } else {
             // Setelah data pertama
-            el.className = "price"; 
+            elPrice.className = "price"; 
+            elPercentage.className = "percentage-change";
+            elPercentage.textContent = '0.00%';
             card.classList.remove('volatile');
         }
 
         // Update tampilan dan simpan harga baru
-        el.textContent = "$" + newPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        elPrice.textContent = "$" + newPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         currentPrices[symbol] = newPrice;
         
-        // --- Log Aktivitas BARU ---
+        // --- Log Aktivitas ---
         const newLogEntry = document.createElement('p');
         newLogEntry.innerHTML = logMessage;
-        logElement.prepend(newLogEntry); // Tambahkan di atas
+        logElement.prepend(newLogEntry); 
         
         // Batasi log agar tidak terlalu panjang
         if (logElement.children.length > 15) {
@@ -144,5 +151,3 @@ function activateSomniaDataStreamSimulation() {
 
 // Mulai Proyek!
 activateSomniaDataStreamSimulation();
-
-
