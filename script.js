@@ -10,6 +10,10 @@ const container = document.getElementById("crypto-container");
 const logElement = document.getElementById("activity-log");
 const alertContainer = document.getElementById("alert-container");
 
+const healthIndicator = document.createElement('span');
+healthIndicator.id = 'stream-health';
+document.querySelector('header h1').appendChild(healthIndicator);
+
 let currentPrices = {}; // Menyimpan harga terakhir
 
 // Inisialisasi tampilan awal
@@ -126,3 +130,4 @@ function activateSomniaDataStreamSimulation() {
 
 // Mulai Proyek!
 activateSomniaDataStreamSimulation();
+
